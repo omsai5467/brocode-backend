@@ -1,0 +1,116 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Web Audio API: AudioBuffer</title>
+  </head>
+  <script type="text/javascript" src="/pcm"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://unpkg.com/wavefile"></script>
+
+
+  <body>
+    <h1>Audio Buffer with Raw Data</h1>
+    <button>play SOund</button>
+  </body>
+ 
+
+  <button type="button" onclick="getclients()">getclients</button>
+ 
+
+
+
+  <div id="clientHolder" >
+
+  </div>
+
+
+
+
+  <script>
+   async  function startPcm(obj){
+      let response = await fetch(`startAudio/${obj}`)
+      let responseText = await response.json();
+      document.getElementById(obj+"-status").innerHTML = responseText.status
+      
+   }
+
+
+   async function stopPcm(obj){
+    let response = await fetch(`stopAudio/${obj}`)
+      let responseText = await response.json();
+      document.getElementById(obj+"-status").innerHTML = responseText.status
+   }
+  async function getclients(){  
+    let response = await fetch("/getSocket");
+    let data = await response.json();
+    let html = ""
+    for(let i = 0;i<data.length;i++){
+      let id = data[i]
+      let template  = `<p id=${id} onclick="startPcm(this.id)"> start pcm data with id ---->  ${id} <button type="button" id=${id} onclick="startPcm(this.id)">start</button>status <p id=${id}-status></p></p> <button type="button" id=${id} onclick="stopPcm(this.id)">stop</button>`
+      html = template + html;
+    }
+    document.getElementById("clientHolder").innerHTML = html;
+  }
+  
+    
+  </script>
+  
+
+  <script>
+    let player;
+    const button = document.querySelector("button");
+
+    let audioCtx;
+
+    // Stereo
+    let channels = 1;
+
+    function init() {
+      audioCtx = new AudioContext();
+    }
+
+    button.onclick = () => {
+      if (!audioCtx) {
+        init();
+        player= new PCMPlayer({
+        encoding: '32bitInt',
+        channels: 2,
+        sampleRate: 44100,
+        // flushingTime: 500
+  
+   });
+        
+      }
+      console.log(audioCtx)
+
+      
+    };
+
+
+
+
+
+    var socket = io();
+    socket.on("audiodata",async (data)=>{
+        if(player){
+          var buff = new Uint8Array(data);
+            player.feed(buff);
+        }else{
+          console.log(data)
+        }
+       
+
+      })
+  </script>
+</html>
+
+
+
