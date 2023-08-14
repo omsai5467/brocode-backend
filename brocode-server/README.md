@@ -45,9 +45,9 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ## Install
 
-    $ git clone https://github.com/YOUR_USERNAME/PROJECT_TITLE
-    $ cd PROJECT_TITLE
-    $ yarn install
+    $ clone this repo
+    $ cd brocode
+    $ npm  install
 
 ## Configure app
 
@@ -59,8 +59,8 @@ Open `a/nice/path/to/a.file` then edit it with your settings. You will need:
 
 ## Running the project
 
-    $ yarn start
+    $ node index.js
 
 ## Simple build for production
 
-    $ yarn build
+    $ use production based webserver
